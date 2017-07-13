@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Xml.Linq;
-using DocumentationGenerator;
-using DocumentationGenerator.ConnectionStrings;
-using DocumentationGenerator.Diagnostics;
+using CustomAttributeGenerator;
+using CustomAttributeGenerator.ConnectionStrings;
+using CustomAttributeGenerator.Diagnostics;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.Data.Entity.Design.Extensibility;

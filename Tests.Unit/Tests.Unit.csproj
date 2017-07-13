@@ -101,9 +101,9 @@
     <Compile Include="Support\TemporaryFileTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EFDocumentationGenerator\EFDocumentationGenerator.csproj">
+    <ProjectReference Include="..\EFCustomAttributeGenerator\EFCustomAttributeGenerator.csproj">
       <Project>{4801e905-4b73-4ed5-942c-1fbb90498ee4}</Project>
-      <Name>EFDocumentationGenerator</Name>
+      <Name>EFCustomAttributeGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using DocumentationGenerator;
-using DocumentationGenerator.Diagnostics;
+using CustomAttributeGenerator;
+using CustomAttributeGenerator.Diagnostics;
 using EnvDTE;
 using Moq;
 using Xunit;

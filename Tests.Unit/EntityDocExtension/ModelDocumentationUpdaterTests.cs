@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-using DocumentationGenerator;
-using DocumentationGenerator.Utilities;
+using CustomAttributeGenerator;
+using CustomAttributeGenerator.Utilities;
 using Moq;
 using Xunit;
 

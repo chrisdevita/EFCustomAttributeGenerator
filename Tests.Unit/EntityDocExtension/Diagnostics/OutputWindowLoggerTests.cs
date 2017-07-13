@@ -1,4 +1,4 @@
-﻿using DocumentationGenerator.Diagnostics;
+﻿using CustomAttributeGenerator.Diagnostics;
 using EnvDTE;
 using Moq;
 using Xunit;

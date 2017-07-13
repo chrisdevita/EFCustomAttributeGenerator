@@ -1,5 +1,5 @@
-   Entity Designer Documentation Generator
-   Copyright 2017 Matthew Hamilton - https://github.com/mthamil/EFDocumentationGenerator
+   Entity Designer Custom Attribute Generator
+   Copyright 2017 Matthew Hamilton - https://github.com/chrisdevita/EFCustomAttributeGenerator
 
    The following libraries provide testing support: 
         xUnit.net is used as the unit testing framework

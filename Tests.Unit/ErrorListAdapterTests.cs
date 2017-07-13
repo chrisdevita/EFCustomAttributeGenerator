@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DocumentationGenerator;
+using CustomAttributeGenerator;
 using EnvDTE80;
 using Moq;
 using Xunit;

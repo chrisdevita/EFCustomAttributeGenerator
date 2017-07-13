@@ -9,4 +9,6 @@ during code generation.
 The plugin searches the project that an .edmx file belongs to for an App.config containing an Entity
 Framework connection string so that it can connect to the database.
 
+This is a fork based on https://github.com/mthamil/EFDocumentationGenerator
+
 Currently developing.

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using DocumentationGenerator.ConnectionStrings;
+using CustomAttributeGenerator.ConnectionStrings;
 using EnvDTE;
 using Moq;
 using Tests.Unit.Support;

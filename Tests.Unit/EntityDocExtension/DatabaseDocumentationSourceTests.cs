@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using DocumentationGenerator;
+using CustomAttributeGenerator;
 using Moq;
 using Xunit;
 

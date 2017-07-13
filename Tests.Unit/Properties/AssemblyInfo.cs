@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Tests.Unit")]
-[assembly: AssemblyDescription("Contains tests for the Entity Framework Designer Documentation Generator.")]
+[assembly: AssemblyDescription("Contains tests for the Entity Framework Designer Custom Attribute Generator.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCulture("")]
 
