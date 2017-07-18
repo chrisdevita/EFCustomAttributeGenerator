@@ -14,21 +14,22 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+using System;
+using System.Collections.Generic;
+
 namespace CustomAttributeGenerator
 {
-	/// <summary>
-	/// Constants that are common to all Visual Studio programming languages.
-	/// </summary>
-	internal static class EnvDTEConstants
-	{
-		/// <summary>
-		/// The Output window.
-		/// </summary>
-		public const string vsWindowKindOutput = "{34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3}";
-
-		/// <summary>
-		/// An ErrorList window.
-		/// </summary>
-		public const string vsWindowKindErrorList = "{D78612C7-9962-4B83-95D9-268046DAD23A}";
-	}
+    /// <summary>
+    /// Represents a source of entity CustomAttribute.
+    /// </summary>
+    public interface ICustomAttributeSource : IDisposable
+    {
+        /// <summary>
+        /// Retrieves CustomAttribute for an entity or entity property.
+        /// </summary>
+        /// <param name="entityName">An entity name</param>
+        /// <param name="property">An optional entity property</param>
+        /// <returns>A CustomAttribute string</returns>
+        IEnumerable<CustomAttribute> GetCustomAttributes(string entityName, EntityProperty property = null);
+    }
 }

@@ -13,9 +13,9 @@ namespace Tests.Unit.EntityDocExtension
     {
         public ModelDocumentationUpdaterTests()
         {
-            _docSource.Setup(s => s.GetDocumentation(It.IsAny<string>(), It.IsAny<EntityProperty>()))
-                      .Returns((string entityName, EntityProperty property) =>
-                          _documentation[(entityName, property?.Name)]);
+         //   _docSource.Setup(s => s.GetCustomAttributes(It.IsAny<string>(), It.IsAny<EntityProperty>()))
+         //             .Returns((string entityName, EntityProperty property) =>
+         //                 _documentation[(entityName, property?.Name)]);
 
             _underTest = new ModelDocumentationUpdater(_docSource.Object);
         }
@@ -64,7 +64,7 @@ namespace Tests.Unit.EntityDocExtension
         private readonly ModelDocumentationUpdater _underTest;
 
         private IDictionary<(string, string), string> _documentation;
-        private readonly Mock<IDocumentationSource> _docSource = new Mock<IDocumentationSource>();
+        private readonly Mock<ICustomAttributeSource> _docSource = new Mock<ICustomAttributeSource>();
 
         private const string Edmx =
 @"<?xml version='1.0' encoding='utf-8'?>

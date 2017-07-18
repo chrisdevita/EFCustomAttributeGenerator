@@ -1,5 +1,6 @@
 //  Entity Designer Custom Attribute Generator
-//  Copyright 2017 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2017 Christian DeVita - chris.devita@gmail.com
+//  Based off of https://github.com/mthamil/EFDocumentationGenerator
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -36,6 +37,6 @@ namespace CustomAttributeGenerator.Diagnostics
 			PaneName = EntityDesignerPaneName;
 		}
 
-		private const string EntityDesignerPaneName = "Entity Documentation Generator";
+		private const string EntityDesignerPaneName = "Entity Custom Attribute Generator";
 	}
 }

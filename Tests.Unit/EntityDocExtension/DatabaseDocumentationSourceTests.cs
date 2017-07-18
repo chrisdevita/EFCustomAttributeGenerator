@@ -5,9 +5,9 @@ using Xunit;
 
 namespace Tests.Unit.EntityDocExtension
 {
-	public class DatabaseDocumentationSourceTests
+	public class DatabaseCustomAttributeSourceTests
 	{
-		public DatabaseDocumentationSourceTests()
+		public DatabaseCustomAttributeSourceTests()
 		{
 		    _command.SetupGet(c => c.Parameters)
 		            .Returns(new Mock<IDataParameterCollection> { DefaultValue = DefaultValue.Mock }.Object);
@@ -15,7 +15,7 @@ namespace Tests.Unit.EntityDocExtension
 		    _connection.Setup(c => c.CreateCommand())
 		               .Returns(_command.Object);
 
-			_underTest = new DatabaseDocumentationSource("connectionString", _ => _connection.Object);
+			_underTest = new DatabaseCustomAttributeSource("connectionString", _ => _connection.Object);
 		}
 
 		[Fact]
@@ -28,7 +28,7 @@ namespace Tests.Unit.EntityDocExtension
 			_connection.Verify(c => c.Dispose(), Times.Once());
 		}
 
-		private readonly DatabaseDocumentationSource _underTest;
+		private readonly DatabaseCustomAttributeSource _underTest;
 
 		private readonly Mock<IDbCommand> _command = new Mock<IDbCommand> { DefaultValue = DefaultValue.Mock };
 		private readonly Mock<IDbConnection> _connection = new Mock<IDbConnection> { DefaultValue = DefaultValue.Mock };

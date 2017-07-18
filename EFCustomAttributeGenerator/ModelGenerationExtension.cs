@@ -1,5 +1,6 @@
 ﻿//  Entity Designer Custom Attribute Generator
-//  Copyright 2017 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2017 Christian DeVita - chris.devita@gmail.com
+//  Based off of https://github.com/mthamil/EFDocumentationGenerator
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -45,7 +46,7 @@ namespace CustomAttributeGenerator
         public ModelGenerationExtension(ILogger logger, IConnectionStringLocator connectionStringLocator, IReadOnlyList<ErrorItem> errorList)
             : this(logger,
                    connectionStringLocator,
-                   connectionString => new DatabaseDocumentationSource(connectionString),
+                   connectionString => new DatabaseCustomAttributeSource(connectionString),
                    source => new ModelDocumentationUpdater(source), 
                    errorList)
         {
@@ -56,19 +57,19 @@ namespace CustomAttributeGenerator
         /// </summary>
         /// <param name="logger">Used for logging informational messages</param>
         /// <param name="connectionStringLocator">Used for retrieving a connection string</param>
-        /// <param name="documentationSourceFactory">Creates <see cref="IDocumentationSource"/> objects</param>
+        /// <param name="customAttributeSourceFactory">Creates <see cref="ICustomAttributeSource"/> objects</param>
         /// <param name="modelUpdaterFactory">Creates objects that populate an EDMX model's documentation nodes</param>
         /// <param name="errorList">A read-only view of the Error List</param>
         public ModelGenerationExtension(
             ILogger logger, 
             IConnectionStringLocator connectionStringLocator, 
-            Func<string, IDocumentationSource> documentationSourceFactory,
-            Func<IDocumentationSource, IModelDocumentationUpdater> modelUpdaterFactory,
+            Func<string, ICustomAttributeSource> customAttributeSourceFactory,
+            Func<ICustomAttributeSource, IModelDocumentationUpdater> modelUpdaterFactory,
             IReadOnlyList<ErrorItem> errorList)
         {
             _logger = logger;
             _connectionStringLocator = connectionStringLocator;
-            _documentationSourceFactory = documentationSourceFactory;
+            _customAttributeSourceFactory = customAttributeSourceFactory;
             _modelUpdaterFactory = modelUpdaterFactory;
             _errorList = errorList;
         }
@@ -162,7 +163,7 @@ namespace CustomAttributeGenerator
                 return;
             }
 
-            using (var docSource = _documentationSourceFactory(connectionString.ToString()))
+            using (var docSource = _customAttributeSourceFactory(connectionString.ToString()))
             {
                 _modelUpdaterFactory(docSource).UpdateDocumentation(currentDocument);
             }
@@ -173,8 +174,8 @@ namespace CustomAttributeGenerator
         private ICollection<ErrorItem> _edmxErrors; 
 
         private readonly IConnectionStringLocator _connectionStringLocator;
-        private readonly Func<string, IDocumentationSource> _documentationSourceFactory;
-        private readonly Func<IDocumentationSource, IModelDocumentationUpdater> _modelUpdaterFactory;
+        private readonly Func<string, ICustomAttributeSource> _customAttributeSourceFactory;
+        private readonly Func<ICustomAttributeSource, IModelDocumentationUpdater> _modelUpdaterFactory;
         private readonly IReadOnlyList<ErrorItem> _errorList;
         private readonly ILogger _logger;
     }

@@ -16,19 +16,30 @@
 
 namespace CustomAttributeGenerator
 {
-	/// <summary>
-	/// Constants that are common to all Visual Studio programming languages.
-	/// </summary>
-	internal static class EnvDTEConstants
-	{
-		/// <summary>
-		/// The Output window.
-		/// </summary>
-		public const string vsWindowKindOutput = "{34E76E81-EE4A-11D0-AE2E-00A0C90FFFC3}";
+    /// <summary>
+    /// Represents an custom attribute.
+    /// </summary>
+    public class CustomAttribute
+    {
+        /// <summary>
+        /// Initializes a new <see cref="CustomAttribute"/>.
+        /// </summary>
+        /// <param name="name">The property name</param>
+        /// <param name="value">The property value</param>
+        public CustomAttribute(string name, string value)
+        {
+            Name = name;
+            Value = value;
+        }
 
-		/// <summary>
-		/// An ErrorList window.
-		/// </summary>
-		public const string vsWindowKindErrorList = "{D78612C7-9962-4B83-95D9-268046DAD23A}";
-	}
+        /// <summary>
+        /// The property name.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// The property Value.
+        /// </summary>
+        public string Value { get; }
+    }
 }

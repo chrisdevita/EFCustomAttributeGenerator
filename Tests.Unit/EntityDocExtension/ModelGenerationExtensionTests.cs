@@ -29,7 +29,7 @@ namespace Tests.Unit.EntityDocExtension
             _underTest = new ModelGenerationExtension(
                 Mock.Of<ILogger>(), 
                 _connectionStringLocator.Object, 
-                _ => _documentationSource.Object, 
+                _ => _customAttributeSource.Object, 
                 _ => _modelUpdater.Object,
                 _errorList);
         }
@@ -93,7 +93,7 @@ namespace Tests.Unit.EntityDocExtension
 
         private readonly List<ErrorItem> _errorList = new List<ErrorItem>();
         private readonly Mock<IModelDocumentationUpdater> _modelUpdater = new Mock<IModelDocumentationUpdater>();
-        private readonly Mock<IDocumentationSource> _documentationSource = new Mock<IDocumentationSource>();
+        private readonly Mock<ICustomAttributeSource> _customAttributeSource = new Mock<ICustomAttributeSource>();
         private readonly Mock<IConnectionStringLocator> _connectionStringLocator = new Mock<IConnectionStringLocator>();
     }
 }

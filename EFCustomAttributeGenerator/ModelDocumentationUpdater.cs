@@ -1,5 +1,6 @@
 ﻿//  Entity Designer Custom Attribute Generator
-//  Copyright 2017 Matthew Hamilton - matthamilton@live.com
+//  Copyright 2017 Christian DeVita - chris.devita@gmail.com
+//  Based off of https://github.com/mthamil/EFDocumentationGenerator
 // 
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -14,95 +15,131 @@
 //  limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using CustomAttributeGenerator.Utilities;
 
 namespace CustomAttributeGenerator
 {
-	/// <summary>
-	/// Updates XML EDMX file documentation nodes.
-	/// </summary>
-	internal class ModelDocumentationUpdater : IModelDocumentationUpdater
-	{
-		/// <summary>
-		/// Initializes a new <see cref="ModelDocumentationUpdater"/>.
-		/// </summary>
-		/// <param name="documentationSource">The documentation source</param>
-		public ModelDocumentationUpdater(IDocumentationSource documentationSource)
-		{
-			_documentationSource = documentationSource;
-		}
+    /// <summary>
+    /// Updates XML EDMX file documentation nodes.
+    /// </summary>
+    internal class ModelDocumentationUpdater : IModelDocumentationUpdater
+    {
+        /// <summary>
+        /// Initializes a new <see cref="ModelDocumentationUpdater"/>.
+        /// </summary>
+        /// <param name="customAttributeSource">The custom attribute source</param>
+        public ModelDocumentationUpdater(ICustomAttributeSource customAttributeSource)
+        {
+            _customAttributeSource = customAttributeSource;
+        }
 
-		/// <summary>
-		/// Iterates over the entities in the conceptual model and attempts to populate
-		/// their documentation nodes with values from the database.
-		/// Existing documentation will be removed and replaced by database content.
-		/// </summary>
-		/// <param name="modelDocument">An .edmx XML document to update</param>
-		public void UpdateDocumentation(XDocument modelDocument)
-		{
-			_namespace = modelDocument.Edm().Namespace;
+        /// <summary>
+        /// Iterates over the entities in the conceptual model and attempts to populate
+        /// their documentation nodes with values from the database.
+        /// Existing documentation will be removed and replaced by database content.
+        /// </summary>
+        /// <param name="modelDocument">An .edmx XML document to update</param>
+        public void UpdateDocumentation(XDocument modelDocument)
+        {
+            _namespace = modelDocument.Edm().Namespace;
 
-			var entityTypeElements = modelDocument.Edm().Descendants("EntityType").ToList();
-			foreach (var entityType in entityTypeElements)
-			{
-				string tableName = entityType.Attribute("Name").Value;
-				UpdateNodeDocumentation(entityType, _documentationSource.GetDocumentation(tableName));
+            var entityTypeElements = modelDocument.Edm().Descendants("EntityType").ToList();
+            foreach (var entityType in entityTypeElements)
+            {
+                string tableName = entityType.Attribute("Name").Value;
 
-				var properties =
-						entityType.Edm().Descendants("Property")
-								  .Select(e => new
-								  {
-									  Element = e,
-									  Property = new EntityProperty(
-												   e.Attribute("Name").Value,
-												   EntityPropertyType.Property)
-								  })
-					.Concat(
-						entityType.Edm().Descendants("NavigationProperty")
-								  .Select(e => new
-								  {
-									  Element = e,
-									  Property = CreateNavProperty(e, modelDocument)
-								  }));
+                List<CustomAttribute> tableCustomAttributes = _customAttributeSource.GetCustomAttributes(tableName).ToList<CustomAttribute>();
+                foreach (var customAttribute in tableCustomAttributes)
+                {
+                    if (customAttribute.Name.ToLower() == "ms_description")
+                        UpdateNodeDocumentation(entityType, customAttribute.Value);
+                }
 
-				foreach (var property in properties)
-				{
-					UpdateNodeDocumentation(property.Element, 
-						_documentationSource.GetDocumentation(tableName, property.Property));
-				}
-			}
-		}
+                var properties =
+                        entityType.Edm().Descendants("Property")
+                                  .Select(e => new
+                                  {
+                                      Element = e,
+                                      Property = new EntityProperty(
+                                                   e.Attribute("Name").Value,
+                                                   EntityPropertyType.Property)
+                                  })
+                    .Concat(
+                        entityType.Edm().Descendants("NavigationProperty")
+                                  .Select(e => new
+                                  {
+                                      Element = e,
+                                      Property = CreateNavProperty(e, modelDocument)
+                                  }));
 
-		private void UpdateNodeDocumentation(XContainer element, string documentation)
-		{
-			if (String.IsNullOrWhiteSpace(documentation))
-				return;
+                XNamespace customNamespace = "http://CustomNamespace.com";
 
-			var fixedDocumentation = documentation.Trim();
+                foreach (var property in properties)
+                {
+                    List<CustomAttribute> propertyCustomAttributes = _customAttributeSource.GetCustomAttributes(tableName, property.Property).ToList<CustomAttribute>();
 
-			// Remove existing documentation.
-			element.Edm().Descendants("Documentation").Remove();
+                    // No need to add namespace attribute since it automatically adds for you.
+                    //if (propertyCustomAttributes.Count > 0)
+                    //    property.Element.SetAttributeValue(XNamespace.Xmlns + "a", "http://CustomNamespace.com");
 
-			element.AddFirst(new XElement(XName.Get("Documentation", _namespace),
-										  new XElement(XName.Get("Summary", _namespace), fixedDocumentation)));
-		}
+                    foreach (var customAttribute in propertyCustomAttributes)
+                    {
+                        if (customAttribute.Name.ToLower() == "ms_description")
+                            UpdateNodeDocumentation(property.Element, customAttribute.Value);
+                        else
+                            UpdateNodeCustomAttribute(customNamespace, property.Element, customAttribute.Name, customAttribute.Value);
+                    }
+                }
+            }
+        }
 
-		private static EntityProperty CreateNavProperty(XElement element, XContainer document)
-		{
-			var relationship = element.Attribute("Relationship").Value;
-			var association = document.Edm()
-				.Descendants("AssociationSet")
-				.Single(ae => ae.Attribute("Association").Value == relationship);
+        private void UpdateNodeDocumentation(XContainer element, string documentation)
+        {
+            if (String.IsNullOrWhiteSpace(documentation))
+                return;
 
-			return new EntityProperty(
-				association.Attribute("Name").Value,
-				EntityPropertyType.NavigationProperty);
-		}
+            var fixedDocumentation = documentation.Trim();
 
-		private string _namespace;
+            // Remove existing documentation.
+            element.Edm().Descendants("Documentation").Remove();
 
-		private readonly IDocumentationSource _documentationSource;
-	}
+            element.AddFirst(new XElement(XName.Get("Documentation", _namespace),
+                                          new XElement(XName.Get("Summary", _namespace), fixedDocumentation)));
+        }
+
+        private void UpdateNodeCustomAttribute(XNamespace customNamespace, XElement element, string name, string value)
+        {
+            if (String.IsNullOrWhiteSpace(name) || String.IsNullOrWhiteSpace(value))
+                return;
+
+            var fixedDocumentation = value.Trim();
+
+            element.SetAttributeValue(customNamespace + name, value);
+        }
+
+        private void AddCustomNamespace(XElement element)
+        {
+            element.SetAttributeValue(XNamespace.Xmlns + "ca", "http://CustomNamespace.com");
+        }
+
+
+        private static EntityProperty CreateNavProperty(XElement element, XContainer document)
+        {
+            var relationship = element.Attribute("Relationship").Value;
+            var association = document.Edm()
+                .Descendants("AssociationSet")
+                .Single(ae => ae.Attribute("Association").Value == relationship);
+
+            return new EntityProperty(
+                association.Attribute("Name").Value,
+                EntityPropertyType.NavigationProperty);
+        }
+
+        private string _namespace;
+
+        private readonly ICustomAttributeSource _customAttributeSource;
+    }
 }
