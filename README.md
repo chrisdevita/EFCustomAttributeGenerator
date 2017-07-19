@@ -21,14 +21,14 @@ You can access these extened properties in code generation files generates your 
 For example from the Model.tt autogenerate file that is associated with your edmx file and where the name of your extended property is 'Custom_Attribute':
 <pre>
 <#
-    var simpleProperties = typeMapper.GetSimpleProperties(entity);
+	var simpleProperties = typeMapper.GetSimpleProperties(entity);
     if (simpleProperties.Any())
     {
-        foreach (var edmProperty in simpleProperties)
+		foreach (var edmProperty in simpleProperties)
         {
-				if (edmProperty.MetadataProperties.Contains("http://CustomNamespace.com:Custom_Attribute"))
-				{
-					MetadataProperty annotationProperty = edmProperty.MetadataProperties["http://CustomNamespace.com:Custom_Attribute"];
+			if (edmProperty.MetadataProperties.Contains("http://CustomNamespace.com:Custom_Attribute"))
+			{
+				MetadataProperty annotationProperty = edmProperty.MetadataProperties["http://CustomNamespace.com:Custom_Attribute"];
 #>
 //<#=annotationProperty.Name #>:<#=annotationProperty.Value.ToString() #>
 <#
