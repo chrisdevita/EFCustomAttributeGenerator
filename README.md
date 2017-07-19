@@ -22,8 +22,8 @@ For example from the Model.tt autogenerate file that is associated with your edm
 <pre>
 <#
 	var simpleProperties = typeMapper.GetSimpleProperties(entity);
-    if (simpleProperties.Any())
-    {
+	if (simpleProperties.Any())
+	{
 		foreach (var edmProperty in simpleProperties)
 		{
 			if (edmProperty.MetadataProperties.Contains("http://CustomNamespace.com:Custom_Attribute"))
