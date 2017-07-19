@@ -25,7 +25,7 @@ For example from the Model.tt autogenerate file that is associated with your edm
     if (simpleProperties.Any())
     {
 		foreach (var edmProperty in simpleProperties)
-        {
+		{
 			if (edmProperty.MetadataProperties.Contains("http://CustomNamespace.com:Custom_Attribute"))
 			{
 				MetadataProperty annotationProperty = edmProperty.MetadataProperties["http://CustomNamespace.com:Custom_Attribute"];
@@ -34,9 +34,9 @@ For example from the Model.tt autogenerate file that is associated with your edm
 <#
 			}
 #>
-    <#=codeStringGenerator.Property(edmProperty)#>
+	<#=codeStringGenerator.Property(edmProperty)#>
 <#
-        }
-    }
+		}
+	}
 #>
 </pre>
