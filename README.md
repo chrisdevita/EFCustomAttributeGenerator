@@ -19,6 +19,7 @@ as a custom attribute to the corresponding node in the .edmx file.
 You can access these extened properties in code generation files generates your POCO classes.
 
 For example from the Model.tt autogenerate file that is associated with your edmx file and where the name of your extended property is 'Custom_Attribute':
+<pre>
 <#
     var simpleProperties = typeMapper.GetSimpleProperties(entity);
     if (simpleProperties.Any())
@@ -38,3 +39,4 @@ For example from the Model.tt autogenerate file that is associated with your edm
         }
     }
 #>
+</pre>
